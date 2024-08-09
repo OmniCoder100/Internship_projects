@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #result h2, #result h3 {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BMI Calculator</h1>
+        <form id="bmi-form">
+            <div class="form-group">
+                <label for="weight">Weight:</label>
+                <input type="number" id="weight" required>
+                <select id="weight-unit">
+                    <option value="kg">kg</option>
+                    <option value="lb">lb</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="height">Height:</label>
+                <input type="number" id="height" required>
+                <select id="height-unit">
+                    <option value="m">meters</option>
+                    <option value="ft">feet</option>
+                </select>
+                <span id="height-inches-wrapper">
+                    <input type="number" id="height-inches" placeholder="Inches">
+                </span>
+            </div>
+            <button type="button" onclick="calculateBMI()">Calculate BMI</button>
+        </form>
+        <div id="result">
+            <h2>Your BMI: <span id="bmi-value"></span></h2>
+            <h3>Category: <span id="bmi-category"></span></h3>
+        </div>
+    </div>
+    <script>
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('weight').value);
+            const weightUnit = document.getElementById('weight-unit').value;
+            const height = parseFloat(document.getElementById('height').value);
+            const heightUnit = document.getElementById('height-unit').value;
+            const heightInches = parseFloat(document.getElementById('height-inches').value) || 0;
+
+            let weightInKg;
+            let heightInM;
+
+            // Convert weight to kg
+            weightInKg = weightUnit === 'lb' ? weight * 0.453592 : weight;
+
+            // Convert height to meters
+            if (heightUnit === 'ft') {
+                heightInM = (height * 0.3048) + (heightInches * 0.0254);
+            } else {
+                heightInM = height;
+            }
+
+            const bmi = weightInKg / (heightInM * heightInM);
+            const bmiValue = bmi.toFixed(2);
+            const bmiCategory = getBMICategory(bmi);
+
+            document.getElementById('bmi-value').innerText = bmiValue;
+            document.getElementById('bmi-category').innerText = bmiCategory;
+        }
+
+        function getBMICategory(bmi) {
+            if (bmi < 18.5) return 'Underweight';
+            if (bmi < 24.9) return 'Normal weight';
+            if (bmi < 29.9) return 'Overweight';
+            return 'Obesity';
+        }
+    </script>
+</body>
+</html>
